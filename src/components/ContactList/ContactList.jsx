@@ -4,11 +4,9 @@ import { deleteContact } from '../../store/reducers/contacts';
 import { useSelector } from 'react-redux'; 
 import css from './contactList.module.css'
 
-
 const ContactList = ({ onDeleteContact }) => {
 
   const filter = useSelector(state => state.filter);
-
   const contacts = useSelector(state => state.contacts);
 
   const filteredContacts = contacts.filter((contact) =>

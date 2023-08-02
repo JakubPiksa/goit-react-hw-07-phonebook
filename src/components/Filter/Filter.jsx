@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { setFilter } from '../../store/reducers/filter';
 import css from './filter.module.css'
 
-
 const Filter = ({ filter, onFilterChange }) => {
   return (
     <input
