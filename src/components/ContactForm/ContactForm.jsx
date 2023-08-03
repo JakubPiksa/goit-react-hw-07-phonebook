@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { addContact } from '../../store/reducers/contacts';
 import { nanoid } from 'nanoid';
-import { useSelector } from 'react-redux'; 
-import css from './contactForm.module.css'
+import { useSelector } from 'react-redux';
+import css from './contactForm.module.css';
 
 const ContactForm = ({ onAddContact }) => {
   const [name, setName] = useState('');
@@ -11,14 +11,25 @@ const ContactForm = ({ onAddContact }) => {
 
   const contacts = useSelector(state => state.contacts);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
+
+    const existingContactWithNumber = contacts.find(contact => contact.number === number);
+    const existingContactWithName = contacts.find(contact => contact.name === name);
+
+    if (existingContactWithNumber) {
+      alert('This phone number is already saved.');
+      return;
+    }
+
+    if (existingContactWithName) {
+      alert('This contact name is already saved.');
+      return;
+    }
+
     onAddContact({ id: nanoid(), name, number });
     setName('');
     setNumber('');
-
-    const newContacts = [...contacts, { id: nanoid(), name, number }];
-    localStorage.setItem('contacts', JSON.stringify(newContacts));
   };
 
   return (
@@ -28,7 +39,7 @@ const ContactForm = ({ onAddContact }) => {
         type="text"
         name="name"
         value={name}
-        onChange={(event) => setName(event.target.value)}
+        onChange={event => setName(event.target.value)}
         placeholder="Name"
         pattern="^[a-zA-Zа-яА-Я]+([' -]?[a-zA-Zа-яА-Я ]?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces."
@@ -39,7 +50,7 @@ const ContactForm = ({ onAddContact }) => {
         type="tel"
         name="number"
         value={number}
-        onChange={(event) => setNumber(event.target.value)}
+        onChange={event => setNumber(event.target.value)}
         placeholder="Phone number"
         pattern="\d{1,9}"
         title="Phone number must contain numbers only"
@@ -52,8 +63,8 @@ const ContactForm = ({ onAddContact }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  onAddContact: (contact) => dispatch(addContact(contact)),
+const mapDispatchToProps = dispatch => ({
+  onAddContact: contact => dispatch(addContact(contact)),
 });
 
 export default connect(null, mapDispatchToProps)(ContactForm);
